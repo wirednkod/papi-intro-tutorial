@@ -1,67 +1,142 @@
-# Initialize a Basic TypeScript Project
+# Lets PAPI this...!
 
-In this step, we'll kick off our journey by setting up a basic TypeScript project where we'll explore different integration examples of the Polkadot API (or PAPI, as I'll call it from here on out—because who doesn’t love saving a few keystrokes?).
+Now that our project is ready, we can init the setup for polkadot api.
+I, very much, propose once again to have a look on [Polkadot API's documentation (https://papi.how)](https://papi.how), but in case, you either prefer this format, or you have been there and are back, then let's go for it. :)
 
-While you could use other toolkits for JavaScript and TypeScript apps (like Vite or simply node), I've opted for Bun. Why? Because it's the quickest way to get a TypeScript-ready project up and running without getting bogged down in the nitty-gritty details.
+## PAPI installation
 
-Keep in mind, this tutorial is focused on showing you how to set up PAPI and work with various providers. We're not diving deep into how to set up a TypeScript project from scratch—there are plenty of resources out there for that.
+Of course we need, first of all, to add the `polkadot-api` dependency in our project.
+Lets do that by running:
 
-Now that we’ve got that covered, let’s jump into the first step!
+```shell
+$ bun install polkadot-api
+```
 
-> Note: Installing Bun
-> Before we dive in, you'll need to have Bun installed on your system. For the installation process, [please follow the official Bun documentation](https://bun.sh/docs/installation#installing).
+That’s it! The installation is all set.
+
+Ready for the next step? We’ll be configuring PAPI.
+
+But before we dive in, it’s important to get a basic understanding of how PAPI works.
+
+## What our examples will be
+
+Throughout this tutorial, we'll explore the following Polkadot API (PAPI) use cases for connecting to the network:
+
+1. **Connecting to the Polkadot Relay Chain:** We’ll start by using a WsProvider provided by PAPI to create a client that connects to the Polkadot relay chain's RPC server. We’ll then log the finalized block number and hash as they are produced.
+2. **Connecting to the People Parachain:** Next, we’ll apply a similar approach to create a client that connects to the RPC server of the People system parachain. Here, we’ll log specific information from an account’s address.
+3. **Multi-Chain Connection:** Then, we’ll set up a multi-chain connection to retrieve information from both the People and Collective system chains.
+4. **Using the Smoldot Provider:** Finally, we’ll repeat all of the above steps using the Smoldot provider that PAPI includes, allowing us to see how it compares with the WsProvider.
+
+You might be wondering why I’m bringing this up at this point. Here’s why:
+
+To properly configure each project with the Polkadot API, it's important to know which chains we’ll be interacting with upfront. This allows us to set everything up correctly from the start.
+
+While it’s certainly possible to add new chains later if needed, for the sake of this tutorial, we’ll configure everything in advance.
+This approach keeps things organized and helps ensure a smoother workflow.
+
+Given the steps we’ll be taking, we’ll need to configure three different chains:
+
+- The `polkadot` relay chain
+- The `people` system parachain and
+- The `collectives` parachain
+
+## Configuring Polkadot API
+
+Polkadot API comes with a handy bundle of chainspecs for both [`well-known-chains` and `system-chains`](https://github.com/polkadot-api/polkadot-api/tree/main/packages/known-chains) to make your life easier.
+
+This means you don’t have to worry about finding endpoints for fetching metadata or chainspecs (which are needed for the light client). All of this is bundled right into PAPI.
+
+As we move forward, you’ll see just how helpful this can be in simplifying the setup process.
+
+### Adding polkadot chain
+
+Lets get going with this and run:
+
+```shell
+$ bunx papi add dot -n polkadot
+```
+
+> Note: bunx is the equivelent package runner for bun (as npx is for npm).
+> You can read [more here](https://bun.sh/docs/cli/bunx).
+
+What happened here?
+Using `bunx` we asked (politely) from Polkadot API to fetch for you, in a `dot` "variable", the metadata from (the well-known-chain) `polkadot`.
+
+The outcome of the command should be the following:
+
+```shell
+$ bunx papi add dot -n polkadot
+
+✔ Metadata saved as .papi/metadata/dot.scale
+Saved new spec "dot"
+Reading metadata
+CLI Building entry: .papi/descriptors/src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.3.0
+CLI Target: esnext
+CJS Build start
+ESM Build start
+ESM .papi/descriptors/dist/index.mjs                  9.88 KB
+ESM .papi/descriptors/dist/metadataTypes-FYTIEX4M.mjs 146.06 KB
+ESM .papi/descriptors/dist/descriptors-BGFWDDEF.mjs   25.73 KB
+ESM ⚡️ Build success in 20ms
+CJS .papi/descriptors/dist/index.js 190.36 KB
+CJS ⚡️ Build success in 20ms
+Compilation started
+Compilation successful
+bun install
+bun install v1.1.7 (b0b7db5c)
+
+ + @polkadot-api/descriptors@.papi/descriptors
+
+ 1 package installed [19.00ms]
+```
+
+So what PAPI did for you, behind the scenes?
+
+1.  Created a directory called `.papi` and under it in the dir `metadata` saved all the latest metadata for `polkadot`;
+2.  In your `package.json` file added a dependency link to the descriptors that are created: `"@polkadot-api/descriptors": "file:.papi/descriptors",`.
+3.  Under the `.papi` directory, created a PAPI configuration file called `polkadot-api.json` that looks like this:
+
+```
+{
+ "version": 0,
+ "descriptorPath": ".papi/descriptors",
+ "entries": {
+   "dot": {
+     "chain": "polkadot",
+     "metadata": ".papi/metadata/dot.scale"
+   }
+ }
+}
+```
+
+and contains in `entries` the "variable" `dot`, linked to the respective chain and metadata;
+
+> Note: the command `bunx papi add dot -n polkadot` is same if we used an rpc endpoint with the flag -w, meaning:
 >
-> From this point on, I'll assume that Bun is already installed and ready to go!
+> `$ bunx papi add -w wss://polkadot-collectives-rpc.polkadot.io dot`
+>
+> but since `polkadot` is a known chain, the first command will suffice
 
-### bun init
+In just few words - configured all the paths and needed dependencies with just 1 command.
 
-Create an empty directory and `cd` into it:
+### Adding people and collectives parachains
 
-```bash
-$ mkdir polkadot-api-tutorial && cd polkadot-api-tutorial
-```
-
-Scaffold an empty Bun project with the interactive `bun init` command (Press `enter` to accept the default answer for each prompt):
+Lets run the commands for the rest of the chains we need:
 
 ```shell
-$ bun init
-
-bun init helps you get started with a minimal project and tries to
-guess sensible defaults. Press ^C anytime to quit.
-
-package name (polkadot-api-tutorial):
-entry point (index.ts):
-
-Done! A package.json file was saved in the current directory.
- + index.ts
- + .gitignore
- + tsconfig.json (for editor auto-complete)
- + README.md
-
-To get started, run:
-  bun run index.ts
+$ bunx papi add people -n polkadot_people
 ```
 
-Once completed the following files should appear in your structure:
-
-1. **package.json**: This file is the heart of your project’s configuration. It defines the metadata for your project, including the project name, version, dependencies, scripts, and more. It's similar to the package.json file used in npm projects.
-2. **bun.lockb:** This is Bun’s lock file, similar to package-lock.json in npm or yarn.lock in Yarn.
-3. **tsconfig.json:** This file is automatically generated as TypeScript is installed by default with `bun` (one of the reasons I chose this over other).
-4. **.gitignore:** This file specifies which files and directories should be ignored by Git when committing to a repository.
-   Purpose: It typically includes common files like node_modules/, log files, and lock files that should not be tracked in version control.
-5. **README.md:** The basic markdown file that is often generated as part of the project setup and (actually) is the one you are reading right now
-6. **index.ts**: The initial typescript index file (where our "entry" is), and it should read at this point the following 1 line of code: `console.log("Hello via Bun!");`
-
-In order to make sure that everything works as expected and the project is correctly setup, feel free and run the following command:
+and
 
 ```shell
-$ bun run index.ts
+$ bunx papi add collectives -n polkadot_collectives
 ```
 
-You should see the following output:
+### Configuration Complete
 
-```shell
-Hello via Bun!
-```
+Configuration is now finished! All the necessary chains are set up in your project, and the metadata is neatly organized in a structured directory.
 
-That was it.. our project's initial setup is ready and now we can move forward to setup Polkadot API in the project.
+> Note: It’s a great idea to add PAPI to the "postinstall" script in your package.json to automate the generation of types after installation. (see `package.json` file for how that looks.)
