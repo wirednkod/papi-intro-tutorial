@@ -4,16 +4,14 @@ import { createClient } from "polkadot-api";
 
 import { mapRawIdentity } from "./utils";
 
-// TODO 1: use the getWsProvider to create a provider in order to connect to
-// "wss://polkadot-people-rpc.polkadot.io" endpoint
+const ws = getWsProvider("wss://polkadot-people-rpc.polkadot.io");
 
-// TODO 2: create the client using createClient and passing the ws
-// created in the step above
+const client = createClient(ws);
 
-// TODO 3: using the created client, get the TypedApi (getTypedApi) using
-// the resepctive descriptors for the `people` chain
+const peopleApi = client.getTypedApi(people);
 
-// TODO 4: using the typed API, query an account (address of your choice)
+const accountInfo = await peopleApi.query.Identity.IdentityOf.getValue(
+  "15DCZocYEM2ThYCAj22QE4QENRvUNVrDtoLBVbCm5x4EQncr"
+);
 
-// Util `mapRawIdentity` will beautifully show you the account Identity information
 console.log("accountInfo:", mapRawIdentity(accountInfo));

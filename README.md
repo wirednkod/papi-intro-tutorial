@@ -1,24 +1,41 @@
-# Step 2: Connecting and Querying the People Chain
+# Step 2: Connecting and Querying the People Chain (Solution)
 
-Now that the first step is completed and some skill with PAPI is gained, I will proceed to the 2nd step that I will provide as a /_ TODO _/ task and try to let you figure out what to do.
+Lets see what you needed to have done in each of the TODOs:
 
-Of course I created the `step2.ts` file from you and added the /_ TODO _/ steps that you need to complete. (Remember to add in your `package.json` file the script for running the next step: `"step2": "bun run step2.ts"`)
+## TODO1: "you need to create the provider"
 
-In addition I have added a `utils.ts` file that contains some helpful functions that will be used to make our logs prettier.
+As per `step1` we need to use the (already) imported `getWsProvider` with the people's web socket. That will happen using the following piece of code:
 
-The **5 TODOs** that you need to do here are following the same way of thinking like step 1, with the difference that we will be connecting to polkadot API's people chain (that we imported during config).
+```js
+const ws = getWsProvider("wss://polkadot-people-rpc.polkadot.io");
+```
 
-Remember that you need to create the provider (TODO 1) using "wss://polkadot-people-rpc.polkadot.io", create the client (TODO 2) that this provided will be passed as a parameter.
+## TODO2: "create the client"
 
-Then using that client, you should get the TypedApi (TODO 3) as we did in `step 1` as well.
+Using that `ws` from TODO1, you should create the client (as per `step1`):
 
-Finally, here is the new one. You need to use that typedApi and query an account (address of your choice), to retrieve it's identity from the Identity Pallet.
+```js
+const client = createClient(ws);
+```
 
-You can check again the [polkadot API's docs](https://papi.how/typed#typedapi) at the typedAPI section to understand how to query the storage (hint: `<typedAPI>.query...`) and then ["follow the Identity pallet"](https://github.com/paritytech/polkadot-sdk/tree/master/substrate/frame/identity). Reading that pallet you will see that - quote:
+## TODO3: "get the TypedApi"
 
-> The pallet provides functionality for username authorities to issue usernames. When an account receives a username, they get a default instance of **IdentityInfo**. Usernames also serve as a reverse lookup from username to account.
+For getting the people's typedApi we use the `getTypedApi` but passing as parameter the imported descriptor of `people` instead of the polkadot's one we used in `step1` (dot):
 
-Knowing now that you want to (wink-wink) _query_ the _Identity_ pallet, and the default instance of _IdentityInfo_ and finally [get the value](https://papi.how/typed/queries#entries-with-keys) for that entry.
+```js
+const peopleApi = client.getTypedApi(people);
+```
 
-Go on and try to implement these TODOs.
-In the next step you can find the solution of this.
+## TODO4: "use that typedApi and query an account (address of your choice)"
+
+Now that all first 3 TODOs are done we can use that typed API (`peopleApi`) to `query` the `Identity` pallet for the `IdentityOf` instance. For receiving the storage value PAPI uses the `getValue()` function that should receive the account's address:
+
+```js
+const accountInfo = await peopleApi.query.Identity.IdentityOf.getValue(
+  "15DCZocYEM2ThYCAj22QE4QENRvUNVrDtoLBVbCm5x4EQncr"
+);
+```
+
+Congratilations! if you run the code above correctly you should see a nice console log in your terminal that will show you the information of the given address.
+
+(solution exists in `step2.ts` file.)
