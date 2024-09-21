@@ -1,0 +1,21 @@
+{
+  "name": "papi-intro-tutorial",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "postinstall": "papi",
+    "step1": "bun run step1.ts",
+    "step2": "bun run step2.ts",
+    "step3": "bun run step3.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@polkadot-api/descriptors": "file:.papi/descriptors",
+    "polkadot-api": "^1.3.2"
+  }
+}
