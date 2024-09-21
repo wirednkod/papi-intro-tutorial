@@ -1,56 +1,47 @@
-# Step 3: Multi-chain. Connect and query from people and collective chains
+# Introduction to the new Polkadot API
 
-Now that you are much more skillfull with PAPI we will proceed to the 3rd step which is a bit more complex. Meaning we will crate 2 providers, 2 clients and 2 typedApis.
-One for each, collectives and people chains.
+Welcome to the first interactive tutorial of the new Polkadot API.
 
-The URLs that should be used for the providers are:
+This is a guided tutorial intended to teach readers how to setup, use and interact with Substrate based chains by using the new [Polkadot-API](https://github.com/polkadot-api/polkadot-api).
 
-- people chain is "wss://polkadot-people-rpc.polkadot.io";
-- collectives chain is "wss://polkadot-collectives-rpc.polkadot.io"
+### What is the fuzz about
 
-Look on file `step3.ts` added in this step (and if you are doing the same in your IDE remember to add the relevant script in your `package.json` file).
+The new Polkadot API (PAPI) is:
 
-Once all (duplicated this time) steps are done, then:
+- 🪶 **light client first**: built on top of the [new JSON-RPC spec](https://paritytech.github.io/json-rpc-interface-spec/) to fully leverage the potential of light-clients;
+- 💡 delightful **TypeScript support** with types and docs generated from on-chain metadata;
+- 📋 first class support for **storage** reads, **constants**, **transactions**, **events** and **runtime calls**;
+- 🔗 perform **multiple connections** to different chains simultaneously;
+- 🔄 prepare for upcoming **runtime updates** by generating multiple descriptors and performing **compatibility checks**;
+- 🚀 **performant and lightweight**: ships with multiple subpaths, so dApps don't bundle unnecessary assets;
+- 🔢 uses **native BigInt**, instead of large BigNumber libraries;
+- ⚡ leverages dynamic imports to favour **faster loading times**;
+- ✨ **promise-based and Observable-based APIs**: use the one that best suit your needs and/or coding style;
+- 🔑 use **signers** from your browser extension, or from a private key;
+- 🧩 easy integration with **PJS-based extensions**.
 
-### 1. retrieve from the collective's API the Fellowship Members.
+While Polkadot API is a very interesting approach and way of intertacting with Substrate based chains, I have found it quite challenging to twist my mindset from existing approaches (e.g. PolkadotJS) to installing and using Polkadot-API.
 
-```js
-const collective_members: any[] =
-  await collective_api?.query.FellowshipCollective.Members.getEntries();
-```
+Having said though, after few retries and with some help of the creators ([Josep](https://github.com/josepot) and [Victor](https://github.com/voliva)) I found myself loving, using it and adding it in existing and new projects.
 
-Here, since we want to retrieve multiple values, instead of the `getValue()` we are using the `getEntries()` function from PAPI, allows you to get all entries without passing the keys (more info [here](https://papi.how/typed/queries) at the bottom of the page).
+### What this tutorial is about
 
-### 2. Retrieve for each of the Fellowship member, the respective identity information
+This tutorial is meant for developers who want to install Polkadot-API (or aka PAPI) in a project, add correctly some chains in the project and interact with them with various ways (web socket, smoldot etc.).
 
-```js
-const identities: any[] =
-  await people_api.query.Identity?.IdentityOf?.getValues(
-    collective_members.map((m) => m.keyArgs)
-  );
-```
+In order to address this, we will setup a simple TS project with the minimum needed configuration, run the basic steps needed to "integrate"/"add" (use whatever word fits you best here), the chains we need to connect to in our project and then create some sample calls.
 
-This is very similar to `step 2`, but since we are passing an array of addresses (`keyArg` of each retrieved entry from previous query), we are now using the `getValues()` instead of the `getValue()` in order for PAPI to return all the identities of the addresses in 1 call.
+### What this tutorial is **not** about
 
-### 3. Map results and print them
+- **Not a Comprehensive Guide:** This tutorial focuses on the bare minimum needed to use the Polkadot API in a TypeScript project. It will help you set up a basic project, integrate various chains (including well-known, system chains, or those from a given chainspec), and utilize the Polkadot API.
 
-Last step is to iterate through the `identities` values, and by using the `mapRawIdentity` util (as we did in the previous step as well), to beautify the results.
+- **Not a Substitute for Foundational Knowledge:** While this tutorial is designed to be accessible even if you have little prior experience with the Polkadot API or interactions with Substrate chains, it does not replace a basic introduction to these topics. We recommend familiarizing yourself with the fundamentals, either before or alongside this tutorial.
 
-Finally we are sorting all the results by rank (remember these are the fellowship members and each member has a rank), and print them in our console.
+- **Not an All-in-One Resource:** This is a step-by-step guide aimed at helping you set up the Polkadot API in your project. It is highly recommended to refer to the official [Polkadot API documentation (http://papi.how)](http://papi.how) throughout your learning process and ensure you have a basic understanding of [Typescript](https://www.typescriptlang.org/).
 
-If you run the `step3` (by executing `$bun run step3`) you should see in your console something like:
+- **Not for Experts Only:** You don’t need to be an expert in every topic covered here, but having some exposure to them will enhance your understanding.
 
-```shell
-Display, Github, Address, Rank
-Gav ,  gavofyork ,  16SDAKg9N6kKAbhgDyxBXdHEwpwHUHs2CNEiLNGeZV55qHna ,  7
- ,  rphmeier ,  12MrP337azmkTdfCUKe5XLnSQrbgEKqqfZ4PQC7CZTJKAWR3 ,  6
-bkchr ,  bkchr ,  13fvj4bNfrTo8oW6U8525soRp6vhjAFLum6XBdtqq9yP22E7 ,  6
-Jaco ,   ,  1363HWTPzDrzAQ6ChFiMU6mP4b6jmQid2ae55JQcKtZnpLGv ,  5
-andre ,  andresilva ,  14YDyDZ9o1Nr2hMqLSbjYpr4Wm5s1gux6CvjYZfUTJ4Np3w1 ,  5
-pepyakin ,  pepyakin ,  123SVCkcHnNKyng8EPmaUeay5kKHu1jig99RT21E2cEx5pQF ,  5
-ARKPAR ,  arkpar ,  15G1iXDLgFyfnJ51FKq1ts44TduMyUtekvzQi9my4hgYt2hs ,  5
-...
-...
-```
+This tutorial is divided into sections, each targeting specific learning goals and offering natural pause points. All content is open source and freely accessible [here](https://github.com/wirednkod/papi-intro-tutorial).
 
-Similar scripts are used in the [Fellowship Dashboard - https://polkadot-fellows.xyz](https://polkadot-fellows.xyz) and the results can be seen at the first page's table, where all members of the fellowship appear.
+Suggestions for improvement, comments, issues, and pull requests are welcome.
+
+Enjoy, and I hope you find this tutorial informative and valuable!
