@@ -21,16 +21,10 @@ Create an empty directory and `cd` into it:
 $ mkdir polkadot-api-tutorial && cd polkadot-api-tutorial
 ```
 
-Scaffold an empty Bun project with the interactive `bun init` command (Press `enter` to accept the default answer for each prompt):
+Scaffold an empty Bun project with the interactive `bun init -y` command:
 
 ```shell
-$ bun init
-
-bun init helps you get started with a minimal project and tries to
-guess sensible defaults. Press ^C anytime to quit.
-
-package name (polkadot-api-tutorial):
-entry point (index.ts):
+$ bun init -y
 
 Done! A package.json file was saved in the current directory.
  + index.ts
