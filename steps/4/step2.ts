@@ -13,7 +13,7 @@ import { mapRawIdentity } from "./utils";
 // TODO 3: using the created client, get the TypedApi (getTypedApi) using
 // the resepctive descriptors for the `people` chain
 
-// TODO 4: using the typed API, query an account (address of your choice)
+// TODO 4: using the typed API, query `15DCZocYEM2ThYCAj22QE4QENRvUNVrDtoLBVbCm5x4EQncr`
 
 // Util `mapRawIdentity` will beautifully show you the account Identity information
 console.log("accountInfo:", mapRawIdentity(accountInfo));

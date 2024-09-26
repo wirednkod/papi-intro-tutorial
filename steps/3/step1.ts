@@ -13,7 +13,7 @@ client.finalizedBlock$.subscribe((finalizedBlock) =>
 const dotApi = client.getTypedApi(dot);
 
 const accountInfo = await dotApi.query.System.Account.getValue(
-  "16JGzEsi8gcySKjpmxHVrkLTHdFHodRepEz8n244gNZpr9J"
+  "15DCZocYEM2ThYCAj22QE4QENRvUNVrDtoLBVbCm5x4EQncr"
 );
 
 console.log("accountInfo:", accountInfo);
