@@ -94,7 +94,7 @@ bun install v1.1.7 (b0b7db5c)
 
 So what PAPI did for you, behind the scenes?
 
-1.  Created a directory called `.papi` and under it in the dir `metadata` saved all the latest metadata for `polkadot`;
+1.  Created a directory called `.papi` and under it in the dir `metadata` saved all the latest metadata for `polkadot` as `dot.scale`.
 2.  In your `package.json` file added a dependency link to the descriptors that are created: `"@polkadot-api/descriptors": "file:.papi/descriptors",`.
 3.  Under the `.papi` directory, created a PAPI configuration file called `polkadot-api.json` that looks like this:
 
@@ -115,7 +115,7 @@ and contains in `entries` the "variable" `dot`, linked to the respective chain a
 
 > Note: the command `bunx papi add dot -n polkadot` is same if we used an rpc endpoint with the flag -w, meaning:
 >
-> `$ bunx papi add -w wss://polkadot-collectives-rpc.polkadot.io dot`
+> `$ bunx papi add dot -w wss://polkadot-collectives-rpc.polkadot.io`
 >
 > but since `polkadot` is a known chain, the first command will suffice
 
@@ -135,8 +135,16 @@ and
 $ bunx papi add collectives -n polkadot_collectives
 ```
 
+### Add the PAPI `postinstall` script
+
+In your `package.json`, add a new `scripts` field which contains the field `"postinstall": "papi"`,
+
+```json
+"scripts": {
+  "postinstall": "papi"
+}
+```
+
 ### Configuration Complete
 
 Configuration is now finished! All the necessary chains are set up in your project, and the metadata is neatly organized in a structured directory.
-
-> Note: It’s a great idea to add PAPI to the "postinstall" script in your package.json to automate the generation of types after installation. (see `package.json` file for how that looks.)
