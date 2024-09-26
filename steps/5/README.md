@@ -2,6 +2,11 @@
 
 Lets see what you needed to have done in each of the TODOs:
 
+<!-- TODO:
+  - In general, this README is not shown to the user.
+  - Perhaps you should find another place for this content.
+-->
+
 ## TODO1: "you need to create the provider"
 
 As per `step1` we need to use the (already) imported `getWsProvider` with the people's web socket. That will happen using the following piece of code:
