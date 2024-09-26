@@ -7,7 +7,7 @@ const ws = getWsProvider("wss://dot-rpc.stakeworld.io");
 const client = createClient(ws);
 
 client.finalizedBlock$.subscribe((finalizedBlock) =>
-  console.log(finalizedBlock.number, finalizedBlock.hash)
+  console.log({ finalizedBlock })
 );
 
 const dotApi = client.getTypedApi(dot);
@@ -17,3 +17,5 @@ const accountInfo = await dotApi.query.System.Account.getValue(
 );
 
 console.log("accountInfo:", accountInfo);
+
+// IMO, unsubscribe and exit

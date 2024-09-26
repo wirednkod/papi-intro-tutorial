@@ -4,10 +4,18 @@ As promised, we’ll start by using a WsProvider provided by PAPI to create a cl
 
 First things first though.
 Let's create a new file, named `step1.ts`.
+
+```bash
+touch step1.ts
+```
+
 Then in `package.json`, add the following line in the `scripts` section.
 
-```
-"step1": "bun run step1.ts"
+```diff
+"scripts": {
+  "postinstall": "papi",
++  "step1": "bun run step1.ts"
+}
 ```
 
 ### Edit `step1.ts` file
@@ -37,21 +45,28 @@ const ws = getWsProvider("wss://dot-rpc.stakeworld.io");
 const client = createClient(ws);
 ```
 
-4. Now that the client is created (you can read about it's interface [here](https://papi.how/client#polkadotclient)), we will use, from it, an observable (named `finalizedBLock$`) that emits `BlockInfo` from the latest known finalized block and print the number and hash of that latest block.
+4. Now that the client is created (you can read about it's interface [here](https://papi.how/client#polkadotclient)), we will use, from it, an observable (named `finalizedBlock$`) that emits `BlockInfo` from the latest known finalized block and print the number and hash of that latest block.
    > Note: As per PAPI docs: 'It's a multicast and stateful observable, that will synchronously replay its latest known state.'
 
 ```js
 client.finalizedBlock$.subscribe((finalizedBlock) =>
-  console.log(finalizedBlock.number, finalizedBlock.hash)
+  console.log({ finalizedBlock })
 );
 ```
 
 This should print in the console something like:
 
-```shell
-22624765 0xd65d7be0c9f96ca2f90833d2adbbc59f59b5a9997bc7d4d91e08a3e3dcc26821
-22624766 0x6a323d895a1081fd4c77d4172cc9080ed7d9815e8daaf528788bff88e0959091
+```js
+{
+  finalizedBlock: {
+    hash: "0xf77b74076daf806217235206c30168459d8de3954f043601959ef9eafabb50b8",
+    number: 22707340,
+    parent: "0x91e7d05bcb4eae1c19576da433ea29e1ac75005f8a68533879dfd8666fe30316",
+  },
+}
 ```
+
+<!-- TODO: Break this into a new step -->
 
 5. Now, to interact with the chain, you need to get the `TypedApi`, which includes all the types for every call in that chain. It allows to interact with the runtime metadata easily (make storage calls, create transactions, etc.) and with a great developer experience. To do that we should first import the `dot` "variable" from the descriptors, and then pass it to the `getTypedApi` function.
 
