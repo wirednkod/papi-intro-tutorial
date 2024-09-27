@@ -3,8 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "postinstall": "papi",
-    "step1": "bun run step1.ts"
+    "postinstall": "papi"
   },
   "devDependencies": {
     "@types/bun": "latest"
