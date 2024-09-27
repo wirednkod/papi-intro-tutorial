@@ -26,6 +26,7 @@ async function printChainInfo(client: PolkadotClient) {
 // - Write the logic of the `getBalance` function:
 //   - Call the `getTypedApi` method on the `polkadotClient` variable.
 //     - The `getTypedApi` method should include the parameter `dot`, which we imported above.
+//     - Assign the result to a new constant `dotApi`.
 //   - Call `dotApi.query.System.Account.getValue(address)`.
 //   - `await` the result, and assign it to a new constant `accountInfo`.
 //   - Extract the `free` and `reserved` balance from `accountInfo.data`.
