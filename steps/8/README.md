@@ -8,3 +8,5 @@ Here’s what we’ll do:
 2. Fetch the chain specifications: Inside the function, use the client.getChainSpecData() method to retrieve the chain’s specification. Don’t forget to await the result and store it in a constant named chainSpec.
 3. **Fetch the latest finalized block:** Next, call the `client.getFinalizedBlock()` method to get the most recently finalized block. Again, await the result and store it in a constant called finalizedBlock.
 4. **Print the data:** Finally, log the chain’s name (chainSpec.name) and the finalized block number (finalizedBlock.number) in a user-friendly message.
+
+In the next steps, we’ll dive deeper into how to call this function and work with the fetched data. Let’s keep moving!
