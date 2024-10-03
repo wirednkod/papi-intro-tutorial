@@ -1,6 +1,4 @@
-# Some more information
-
-### Remote Procedure Call (RPC) endpoints
+# Remote Procedure Call (RPC) endpoints
 
 In the Polkadot ecosystem, RPC endpoints are crucial for allowing external applications, wallets, dApps, and nodes to interact with the blockchain. These endpoints provide access to the chain's functionality and data, enabling developers to query the network, submit transactions, and more. Here's an overview of what RPC endpoints are and how they function in Polkadot.
 
