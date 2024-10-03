@@ -30,7 +30,7 @@ Hint:
 }, Binary | undefined] | undefined
 ```
 
-With that information you could then retrieve the data needed (good exercise: try to follow the typed api).
+With that information you could then retrieve the data needed (good exercise: try to follow the typed API).
 
 E.g.:
 

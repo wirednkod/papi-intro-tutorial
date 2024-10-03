@@ -50,7 +50,7 @@ The command then downloads the latest metadata for the chain and stores it in a 
 
 This structure ensures that all the necessary metadata for interacting with the chain is preloaded and organized, streamlining your development process.
 
-## Adding polkadot chain
+## Adding Polkadot chain
 
 Now that the CLI is understood, lets get going with this and run:
 

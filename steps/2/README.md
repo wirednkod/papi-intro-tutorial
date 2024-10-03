@@ -1,6 +1,6 @@
-# Lets PAPI this...!
+# Let's PAPI this...!
 
-Now that our project is ready, we can init the setup for polkadot api.
+Now that our project is ready, we can initialize the setup for Polkadot API.
 I, very much, propose once again to have a look on [Polkadot API's documentation (https://papi.how)](https://papi.how), but in case, you either prefer this format, or you have been there and are back, then let's go for it. :)
 
 ## PAPI installation
