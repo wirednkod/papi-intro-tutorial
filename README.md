@@ -2,9 +2,9 @@
 
 Welcome to the first interactive tutorial of the new Polkadot API.
 
-This is a guided tutorial intended to teach readers how to setup, use and interact with Substrate based chains by using the new [Polkadot-API](https://github.com/polkadot-api/polkadot-api).
+This is a guided tutorial intended to teach readers how to set up, use and interact with Substrate based chains by using the new [Polkadot-API](https://github.com/polkadot-api/polkadot-api).
 
-### What is the fuzz about
+### What is the fuss about
 
 The new Polkadot API (PAPI) is:
 
@@ -16,19 +16,19 @@ The new Polkadot API (PAPI) is:
 - 🚀 **performant and lightweight**: ships with multiple subpaths, so dApps don't bundle unnecessary assets;
 - 🔢 uses **native BigInt**, instead of large BigNumber libraries;
 - ⚡ leverages dynamic imports to favour **faster loading times**;
-- ✨ **promise-based and Observable-based APIs**: use the one that best suit your needs and/or coding style;
+- ✨ **promise-based and Observable-based APIs**: use the one that best suits your needs and/or coding style;
 - 🔑 use **signers** from your browser extension, or from a private key;
 - 🧩 easy integration with **PJS-based extensions**.
 
-While Polkadot API is a very interesting approach and way of intertacting with Substrate based chains, I have found it quite challenging to twist my mindset from existing approaches (e.g. PolkadotJS) to installing and using Polkadot-API.
+While Polkadot API is a very interesting approach and way of interacting with Substrate based chains, I have found it quite challenging to twist my mindset from existing approaches (e.g. PolkadotJS) to installing and using Polkadot-API.
 
-Having said though, after few retries and with some help of the creators ([Josep](https://github.com/josepot) and [Victor](https://github.com/voliva)) I found myself loving, using it and adding it in existing and new projects.
+Having said that, after a few retries and with some help from the creators ([Josep](https://github.com/josepot) and [Victor](https://github.com/voliva)) I found myself loving, using it and adding it in existing and new projects.
 
 ### What this tutorial is about
 
 This tutorial is meant for developers who want to install Polkadot-API (or aka PAPI) in a project, add correctly some chains in the project and interact with them with various ways (web socket, smoldot etc.).
 
-In order to address this, we will setup a simple TS project with the minimum needed configuration, run the basic steps needed to "integrate"/"add" (use whatever word fits you best here), the chains we need to connect to in our project and then create some sample calls.
+In order to address this, we will set up a simple TypeScript project with the minimum needed configuration, run the basic steps needed to "integrate"/"add" (use whatever word fits you best here), the chains we need to connect to in our project and then create some sample calls.
 
 ### What this tutorial is **not** about
 

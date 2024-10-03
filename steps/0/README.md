@@ -28,7 +28,7 @@ Having said though, after few retries and with some help of the creators ([Josep
 
 This tutorial is meant for developers who want to install Polkadot-API (or aka PAPI) in a project, add correctly some chains in the project and interact with them with various ways (web socket, smoldot etc.).
 
-In order to address this, we will setup a simple TS project with the minimum needed configuration, run the basic steps needed to "integrate"/"add" (use whatever word fits you best here), the chains we need to connect to in our project and then create some sample calls.
+In order to address this, we will setup a simple TypeScript project with the minimum needed configuration, run the basic steps needed to "integrate"/"add" (use whatever word fits you best here), the chains we need to connect to in our project and then create some sample calls.
 
 ### What this tutorial is **not** about
 
