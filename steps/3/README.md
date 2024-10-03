@@ -115,7 +115,8 @@ So what PAPI did for you, behind the scenes?
 
 and contains in `entries` the "variable" `dot`, linked to the respective chain and metadata;
 
-> Note: the command `bunx papi add dot -n polkadot` is same if we used an rpc endpoint with the flag -w, meaning:
+> Note: the command `bunx papi add dot -n polkadot` is "same" if we used an RPC endpoint with the flag -w. "Same" should not be lightly taken into account. This is not entiredly correct. If the PAPI's entries are used instead of an RPC endpoint, then the metadata are downloaded in a more decentralized manner - instead of being downladed from 1 specific url.
+
 >
 > `$ bunx papi add -w wss://polkadot-collectives-rpc.polkadot.io dot`
 >
