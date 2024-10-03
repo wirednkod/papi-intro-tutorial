@@ -36,7 +36,7 @@ In order to address this, we will setup a simple TS project with the minimum nee
 
 - **Not a Substitute for Foundational Knowledge:** While this tutorial is designed to be accessible even if you have little prior experience with the Polkadot API or interactions with Substrate chains, it does not replace a basic introduction to these topics. We recommend familiarizing yourself with the fundamentals, either before or alongside this tutorial.
 
-- **Not an All-in-One Resource:** This is a step-by-step guide aimed at helping you set up the Polkadot API in your project. It is highly recommended to refer to the official [Polkadot API documentation (http://papi.how)](http://papi.how) throughout your learning process and ensure you have a basic understanding of [Typescript](https://www.typescriptlang.org/).
+- **Not an All-in-One Resource:** This is a step-by-step guide aimed at helping you set up the Polkadot API in your project. It is highly recommended to refer to the official [Polkadot API documentation (http://papi.how)](http://papi.how) throughout your learning process and ensure you have a basic understanding of [TypeScript](https://www.typescriptlang.org/).
 
 - **Not for Experts Only:** You don’t need to be an expert in every topic covered here, but having some exposure to them will enhance your understanding.
 

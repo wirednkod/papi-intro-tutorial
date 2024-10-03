@@ -50,7 +50,7 @@ Once completed the following files should appear in your structure:
 4. **.gitignore:** This file specifies which files and directories should be ignored by Git when committing to a repository.
    Purpose: It typically includes common files like node_modules/, log files, and lock files that should not be tracked in version control.
 5. **README.md:** The basic markdown file that is often generated as part of the project setup and (actually) is the one you are reading right now
-6. **index.ts**: The initial typescript index file (where our "entry" is), and it should read at this point the following 1 line of code: `console.log("Hello via Bun!");`
+6. **index.ts**: The initial TypeScript index file (where our "entry" is), and it should read at this point the following 1 line of code: `console.log("Hello via Bun!");`
 
 In order to make sure that everything works as expected and the project is correctly setup, feel free and run the following command:
 
