@@ -1,9 +1,5 @@
-# TODO
+# Solution
 
-- `@polkadot-api/descriptors`
-- `getTypedApi`
-- `dotApi.query`
-- `System.Account`
-- `getValue`
+You can find the solution to the previous step here.
 
-- Explain `total_balance = free + reserved`
+<!-- Generally, this page is not shown to the user. -->
