@@ -1,0 +1,28 @@
+diff --git a/index.ts b/index.ts
+index cb0c402..ddd7c90 100644
+--- a/index.ts
++++ b/index.ts
+@@ -1,3 +1,4 @@
++import process from "node:process";
+ import { getWsProvider } from "polkadot-api/ws-provider/web";
+ import { createClient, type PolkadotClient } from "polkadot-api";
+ 
+@@ -8,11 +9,12 @@ function makeClient(endpoint: string): PolkadotClient {
+   return client;
+ }
+ 
+-// TODO: Create the main() function here
+-// async fucntion main()
++async function main() {
++  const polkadotClient = makeClient("wss://rpc.polkadot.io");
++  console.log({ polkadotClient });
+ 
+-// TODO: Then get the client by calling the makeClient function from above
+-// giving as endpoint the "wss://rpc.polkadot.io"
+-// TODO: Try to log the `polkadotClient` for this step in order to see the methods mentioned in the README
++  console.log(`Done!`);
++  process.exit(0);
++}
+ 
+-// TODO: Call the main function
++main();

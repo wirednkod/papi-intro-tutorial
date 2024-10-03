@@ -1,0 +1,29 @@
+diff --git a/bun.lockb b/bun.lockb
+index 72f1cec..42ec40a 100755
+Binary files a/bun.lockb and b/bun.lockb differ
+diff --git a/index.ts b/index.ts
+index c55af32..aa13928 100644
+--- a/index.ts
++++ b/index.ts
+@@ -1,13 +1,9 @@
+-// TODO:
+-// - Import `getWsProvider` from `polkadot-api/ws-provider/web`.
+-// - import `createClient` and `type PolkadotClient` from `polkadot-api`;
++import { getWsProvider } from "polkadot-api/ws-provider/web";
++import { createClient, type PolkadotClient } from "polkadot-api";
+ 
+-// TODO:
+-// - Create a new function `makeClient`
+-//   - Function accepts a parameter `endpoint` with type `string`.
+-//   - Function returns the `PolkadotClient` type we imported above.
+-// - Write the logic for `makeClient`
+-//   - `console.log` a friendly message about which `endpoint` you are connecting to.
+-//   - Call `getWsProvider(endpoint)`, and assign the result to a new `const provider`.
+-//   - Call `createClient(provider)`, and assign the result to a new `const client`.
+-//   - Return `client`.
++function makeClient(endpoint: string): PolkadotClient {
++  console.log(`Connecting to endpoint: ${endpoint}`);
++  const provider = getWsProvider(endpoint);
++  const client = createClient(provider);
++  return client;
++}

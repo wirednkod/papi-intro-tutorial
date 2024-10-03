@@ -1,0 +1,24 @@
+diff --git a/index.ts b/index.ts
+index ddd7c90..7dd2935 100644
+--- a/index.ts
++++ b/index.ts
+@@ -9,8 +9,19 @@ function makeClient(endpoint: string): PolkadotClient {
+   return client;
+ }
+ 
++// TODO:
++// - Create a new `async` function` named `printChainInfo`.
++//   - It should accept a parameter `client` of type `PolkadotClient`.
++// - Write the logic for `printChainInfo`.
++//   - Call the `getChainSpecData` method, which is exposed on `client`.
++//   - `await` the result, and assign the output to a new constant `chainSpec`.
++//   - Call the `getFinalizedBlock` method, which is exposed on `client`.
++//   - `await` the result, and assign the output to a new constant `finalizedBlock`.
++//   - Print `chainSpec.name` and `finalizedBlock.number` with a friendly message.
++
+ async function main() {
+   const polkadotClient = makeClient("wss://rpc.polkadot.io");
++  // TODO: Replace this line with `await printChainInfo({ polkadotClient });`
+   console.log({ polkadotClient });
+ 
+   console.log(`Done!`);
