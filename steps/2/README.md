@@ -6,7 +6,7 @@ I, very much, propose once again to have a look on [Polkadot API's documentation
 ## PAPI installation
 
 Of course we need, first of all, to add the `polkadot-api` dependency in our project.
-Lets do that by running:
+Let's do that by running:
 
 ```shell
 $ bun install polkadot-api

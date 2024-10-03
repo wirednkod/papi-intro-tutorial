@@ -52,7 +52,7 @@ This structure ensures that all the necessary metadata for interacting with the 
 
 ## Adding Polkadot chain
 
-Now that the CLI is understood, lets get going with this and run:
+Now that the CLI is understood, let's get going with this and run:
 
 ```shell
 $ bunx papi add dot -n polkadot
@@ -126,7 +126,7 @@ In just few words - configured all the paths and needed dependencies with just 1
 
 ## Adding people and collectives parachains
 
-Lets run the commands for the rest of the chains we need:
+Let's run the commands for the rest of the chains we need:
 
 ```shell
 $ bunx papi add people -n polkadot_people
