@@ -1,3 +1,6 @@
+// TODO: Remove the "Hello via Bun!" log.
+console.log("Hello via Bun!");
+
 // TODO:
 // - Import `getWsProvider` from `polkadot-api/ws-provider/web`.
 // - import `createClient` and `type PolkadotClient` from `polkadot-api`;

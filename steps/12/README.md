@@ -6,7 +6,7 @@ Earlier in this tutorial, you created the `people` descriptor, which we will now
 
 This approach will allow us to interact with the People’s Chain effectively.
 
-The main query that we are interested fomr the People system chain is the following:
+The main query that we are interested for the People system chain is the following:
 
 ```ts
 await peopleApi.query.Identity.IdentityOf.getValue(address);
@@ -30,7 +30,7 @@ Hint:
 }, Binary | undefined] | undefined
 ```
 
-With that information you could then retrieve the data needed (good exercise: try to follow the typed api).
+With that information you could then retrieve the data needed (good exercise: try to follow the typed API).
 
 E.g.:
 

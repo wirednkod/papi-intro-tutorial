@@ -8,11 +8,9 @@ function makeClient(endpoint: string): PolkadotClient {
   return client;
 }
 
-// TODO: Create the main() function here
-// async fucntion main()
+// TODO: Create a new `async` function named `main` with the following logic:
+//   - Call `makeClient` with endpoint `"wss://rpc.polkadot.io"`.
+//   - Assign the result to a new constant named `polkadotClient`.
+//   - Use `console.log({ polkadotClient });` to take a peek at the methods exposed by the client.
 
-// TODO: Then get the client by calling the makeClient function from above
-// giving as endpoint the "wss://rpc.polkadot.io"
-// TODO: Try to log the `polkadotClient` for this step in order to see the methods mentioned in the README
-
-// TODO: Call the main function
+// TODO: Call the `main` function so it runs when executing this file.
