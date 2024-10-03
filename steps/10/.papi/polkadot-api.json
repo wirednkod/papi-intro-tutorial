@@ -9,6 +9,10 @@
     "people": {
       "chain": "polkadot_people",
       "metadata": ".papi/metadata/people.scale"
+    },
+    "collectives": {
+      "chain": "polkadot_collectives",
+      "metadata": ".papi/metadata/collectives.scale"
     }
   }
 }
