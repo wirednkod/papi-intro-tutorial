@@ -1,3 +1,4 @@
+import process from "node:process";
 import { getWsProvider } from "polkadot-api/ws-provider/web";
 import { createClient, type PolkadotClient } from "polkadot-api";
 
@@ -8,9 +9,12 @@ function makeClient(endpoint: string): PolkadotClient {
   return client;
 }
 
-// TODO: Create a new `async` function named `main` with the following logic:
-//   - Call `makeClient` with endpoint `"wss://rpc.polkadot.io"`.
-//   - Assign the result to a new constant named `polkadotClient`.
-//   - Use `console.log({ polkadotClient });` to take a peek at the methods exposed by the client.
+async function main() {
+  const polkadotClient = makeClient("wss://rpc.polkadot.io");
+  console.log({ polkadotClient });
 
-// TODO: Call the `main` function so it runs when executing this file.
+  console.log(`Done!`);
+  process.exit(0);
+}
+
+main();
