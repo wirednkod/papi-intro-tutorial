@@ -1,47 +1,67 @@
-# Introduction to the new Polkadot API
+# Initialize a Basic TypeScript Project
 
-Welcome to the first interactive tutorial of the new Polkadot API.
+In this step, we'll kick off our journey by setting up a basic TypeScript project where we'll explore different integration examples of the Polkadot API (or PAPI, as I'll call it from here on out—because who doesn’t love saving a few keystrokes?).
 
-This is a guided tutorial intended to teach readers how to set up, use and interact with Substrate based chains by using the new [Polkadot-API](https://github.com/polkadot-api/polkadot-api).
+While you could use other toolkits for JavaScript and TypeScript apps (like Vite or simply node), I've opted for Bun. Why? Because it's the quickest way to get a TypeScript-ready project up and running without getting bogged down in the nitty-gritty details.
 
-### What is the fuss about
+Keep in mind, this tutorial is focused on showing you how to set up PAPI and work with various providers. We're not diving deep into how to set up a TypeScript project from scratch—there are plenty of resources out there for that.
 
-The new Polkadot API (PAPI) is:
+Now that we’ve got that covered, let’s jump into the first step!
 
-- 🪶 **light client first**: built on top of the [new JSON-RPC spec](https://paritytech.github.io/json-rpc-interface-spec/) to fully leverage the potential of light-clients;
-- 💡 delightful **TypeScript support** with types and docs generated from on-chain metadata;
-- 📋 first class support for **storage** reads, **constants**, **transactions**, **events** and **runtime calls**;
-- 🔗 perform **multiple connections** to different chains simultaneously;
-- 🔄 prepare for upcoming **runtime updates** by generating multiple descriptors and performing **compatibility checks**;
-- 🚀 **performant and lightweight**: ships with multiple subpaths, so dApps don't bundle unnecessary assets;
-- 🔢 uses **native BigInt**, instead of large BigNumber libraries;
-- ⚡ leverages dynamic imports to favour **faster loading times**;
-- ✨ **promise-based and Observable-based APIs**: use the one that best suits your needs and/or coding style;
-- 🔑 use **signers** from your browser extension, or from a private key;
-- 🧩 easy integration with **PJS-based extensions**.
+> Note: Installing Bun
+> Before we dive in, you'll need to have Bun installed on your system. For the installation process, [please follow the official Bun documentation](https://bun.sh/docs/installation#installing).
+>
+> From this point on, I'll assume that Bun is already installed and ready to go!
 
-While Polkadot API is a very interesting approach and way of interacting with Substrate based chains, I have found it quite challenging to twist my mindset from existing approaches (e.g. PolkadotJS) to installing and using Polkadot-API.
+### bun init
 
-Having said that, after a few retries and with some help from the creators ([Josep](https://github.com/josepot) and [Victor](https://github.com/voliva)) I found myself loving, using it and adding it in existing and new projects.
+Create an empty directory and `cd` into it:
 
-### What this tutorial is about
+```bash
+$ mkdir polkadot-api-tutorial && cd polkadot-api-tutorial
+```
 
-This tutorial is meant for developers who want to install Polkadot-API (or aka PAPI) in a project, add correctly some chains in the project and interact with them with various ways (web socket, smoldot etc.).
+Scaffold an empty Bun project with the interactive `bun init` command (Press `enter` to accept the default answer for each prompt):
 
-In order to address this, we will set up a simple TypeScript project with the minimum needed configuration, run the basic steps needed to "integrate"/"add" (use whatever word fits you best here), the chains we need to connect to in our project and then create some sample calls.
+```shell
+$ bun init
 
-### What this tutorial is **not** about
+bun init helps you get started with a minimal project and tries to
+guess sensible defaults. Press ^C anytime to quit.
 
-- **Not a Comprehensive Guide:** This tutorial focuses on the bare minimum needed to use the Polkadot API in a TypeScript project. It will help you set up a basic project, integrate various chains (including well-known, system chains, or those from a given chainspec), and utilize the Polkadot API.
+package name (polkadot-api-tutorial):
+entry point (index.ts):
 
-- **Not a Substitute for Foundational Knowledge:** While this tutorial is designed to be accessible even if you have little prior experience with the Polkadot API or interactions with Substrate chains, it does not replace a basic introduction to these topics. We recommend familiarizing yourself with the fundamentals, either before or alongside this tutorial.
+Done! A package.json file was saved in the current directory.
+ + index.ts
+ + .gitignore
+ + tsconfig.json (for editor auto-complete)
+ + README.md
 
-- **Not an All-in-One Resource:** This is a step-by-step guide aimed at helping you set up the Polkadot API in your project. It is highly recommended to refer to the official [Polkadot API documentation (http://papi.how)](http://papi.how) throughout your learning process and ensure you have a basic understanding of [TypeScript](https://www.typescriptlang.org/).
+To get started, run:
+  bun run index.ts
+```
 
-- **Not for Experts Only:** You don’t need to be an expert in every topic covered here, but having some exposure to them will enhance your understanding.
+Once completed the following files should appear in your structure:
 
-This tutorial is divided into sections, each targeting specific learning goals and offering natural pause points. All content is open source and freely accessible [here](https://github.com/wirednkod/papi-intro-tutorial).
+1. **package.json**: This file is the heart of your project’s configuration. It defines the metadata for your project, including the project name, version, dependencies, scripts, and more. It's similar to the package.json file used in npm projects.
+2. **bun.lockb:** This is Bun’s lock file, similar to package-lock.json in npm or yarn.lock in Yarn.
+3. **tsconfig.json:** This file is automatically generated as TypeScript is installed by default with `bun` (one of the reasons I chose this over other options).
+4. **.gitignore:** This file specifies which files and directories should be ignored by Git when committing to a repository.
+   Purpose: It typically includes common files like node_modules/, log files, and lock files that should not be tracked in version control.
+5. **README.md:** The basic markdown file that is often generated as part of the project setup and (actually) is the one you are reading right now
+6. **index.ts**: The initial TypeScript index file (where our "entry" is), and it should read at this point the following 1 line of code: `console.log("Hello via Bun!");`
 
-Suggestions for improvement, comments, issues, and pull requests are welcome.
+In order to make sure that everything works as expected and the project is correctly setup, feel free and run the following command:
 
-Enjoy, and I hope you find this tutorial informative and valuable!
+```shell
+$ bun run index.ts
+```
+
+You should see the following output:
+
+```shell
+Hello via Bun!
+```
+
+That's it.. our project's initial setup is ready and now we can move forward to setup Polkadot API in the project.
