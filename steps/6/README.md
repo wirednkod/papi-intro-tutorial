@@ -14,7 +14,7 @@ In a previous step, we covered how to set up a `provider` and initialize the `cl
 
 Now, we’ll focus on two key methods from this interface that we’ll use in the upcoming steps:
 
-- **`getChainSpecData`**: This method retrieves the chain specification data, providing essential information about the network's configuration.
+- **`getChainSpecData`**: This method retrieves the chain specification data, providing essential information about the network's configuration. **IMPORTANT NOTE:** This method is used in this tutorial, but it should not be used in production apps. Reason is that chain information is not standarized on-chain yet ([RFC-8 should be implemented](https://github.com/polkadot-fellows/RFCs/blob/main/text/0008-parachain-bootnodes-dht.md) for this to happen). So as a heads up you may use this here but do NOT use in real dApps.
 - **`getFinalizedBlock`**: This allows us to fetch the latest finalized block, which is useful for ensuring we're working with the most stable and confirmed state of the blockchain.
 
 Try to log the `polkadotClient` for this step in order to see these methods as output.

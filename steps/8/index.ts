@@ -13,7 +13,7 @@ function makeClient(endpoint: string): PolkadotClient {
 // - Create a new `async` function` named `printChainInfo`.
 //   - It should accept a parameter `client` of type `PolkadotClient`.
 // - Write the logic for `printChainInfo`.
-//   - Call the `getChainSpecData` method, which is exposed on `client`.
+//   - Call the `getChainSpecData` method, which is exposed on `client`. **IMPORTANT NOTE:** This method is used in this tutorial, but it should not be used in production apps.
 //   - `await` the result, and assign the output to a new constant `chainSpec`.
 //   - Call the `getFinalizedBlock` method, which is exposed on `client`.
 //   - `await` the result, and assign the output to a new constant `finalizedBlock`.

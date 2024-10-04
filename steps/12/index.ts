@@ -16,6 +16,7 @@ function makeClient(endpoint: string): PolkadotClient {
 }
 
 async function printChainInfo(client: PolkadotClient) {
+  // **IMPORTANT NOTE:** This method is used in this tutorial, but it should not be used in production apps.
   const chain = await client.getChainSpecData();
   const finalizedBlock = await client.getFinalizedBlock();
   console.log(
