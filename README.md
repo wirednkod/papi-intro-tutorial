@@ -1,52 +1,145 @@
-# Let's PAPI this...!
+# Codegen & "adding" chains
 
-Now that our project is ready, we can initialize the setup for Polkadot API.
-I, very much, propose once again to have a look on [Polkadot API's documentation (https://papi.how)](https://papi.how), but in case, you either prefer this format, or you have been there and are back, then let's go for it. :)
+### Some background first
 
-## PAPI installation
+To connect to a blockchain network like Polkadot, the fundamental requirement is a provider, which acts as a bridge between your application and the chain. Providers typically connect to an RPC (Remote Procedure Call) endpoint, which allows your app to retrieve data like blocks and events. However, simply connecting to the chain doesn’t enable full interaction.
 
-Of course we need, first of all, to add the `polkadot-api` dependency in our project.
-Let's do that by running:
+To interact with the chain — whether by querying storage, making transactions, or calling runtime methods — you also need to understand what data is available and how to format it. This is where metadata becomes crucial. The chain's metadata contains a detailed description of all the storage items, runtime functions, and transactions available on that network, as well as their data types.
+
+Here’s how the process works:
+
+During runtime, PAPI can automatically request the metadata from the chain you're connected to. From this metadata, it generates codecs (serialization and deserialization tools) to communicate with the chain's functions and storage. Before development, however, you need to have this information ready, in order to make your life easier on knowing how to communicate with the chain.
+
+PAPI simplifies this with its CLI (Command Line Interface), which allows you to download the chain’s metadata ahead of time. This metadata is then used to generate all the necessary type descriptors, so you don’t have to manually figure out the structure of every interaction.
+
+In practice, using the CLI to download metadata ensures that your app stays in sync with the specific network you're developing for, especially if that chain undergoes runtime upgrades or type changes​.
+
+That CLI's syntax is:
 
 ```shell
-$ bun install polkadot-api
+$  npx papi add --help
+
+Usage: polkadot-api add [options] <key>
+
+Add a new chain spec to the list
+
+Arguments:
+  key                         Key identifier for the chain spec
+
+Options:
+  --config <filename>         Source for the config file
+  -f, --file <filename>       Source from metadata encoded file
+  -w, --wsUrl <URL>           Source from websocket URL
+  -c, --chainSpec <filename>  Source from chain spec file
+  -n, --name <name>           Source from a well-known chain (choices: "ksmcc3", "paseo",
+                              "polkadot", "polkadot_collectives", "rococo_v2_2", "westend2", [...]")
+  --wasm <filename>           Source from runtime wasm file
+  --no-persist                Do not persist the metadata as a file
+  --skip-codegen              Skip running codegen after adding
+  -h, --help                  display help for command
 ```
 
-That’s it! The installation is all set.
+The `papi add` command is used to register a new chain in your Polkadot project. When running this command, you need to provide a key — a unique identifier that will be used as a constant name when generating code for the chain. Additionally, you specify a source for the chain’s metadata using one of the following flags:
 
-Ready for the next step? We’ll be configuring PAPI.
+- `-f`, `-w`, `-c`, `-n`, or `--wasm`, depending on whether the metadata comes from a file, websocket, chain, or other source.
 
-But before we dive in, it’s important to get a basic understanding of how PAPI works.
+The command then downloads the latest metadata for the chain and stores it in a .papi folder. This folder contains:
 
-## What our examples will be
+1. A **configuration file** called `polkadot-api.json`, which holds the setup information for the chain.
+2. **A metadata file** named `${key}.scale`, which contains the chain's specific metadata for later use.
 
-Throughout this tutorial, we'll explore the following Polkadot API (PAPI) use cases for connecting to the network:
+This structure ensures that all the necessary metadata for interacting with the chain is preloaded and organized, streamlining your development process.
 
-1. **Connecting to the Polkadot Relay Chain:** We’ll start by using a WsProvider provided by PAPI to create a client that connects to the Polkadot relay chain's RPC server. We’ll then log the finalized block number and hash as they are produced.
-2. **Connecting to the People Parachain:** Next, we’ll apply a similar approach to create a client that connects to the RPC server of the People system parachain. Here, we’ll log specific information from an account’s address.
-3. **Multi-Chain Connection:** Then, we’ll set up a multi-chain connection to retrieve information from both the People and Collective system chains.
-   (...upcoming...)
-4. **Using the Smoldot Provider:** Finally, we’ll repeat all of the above steps using the Smoldot provider that PAPI includes, allowing us to see how it compares with the WsProvider.
+## Adding Polkadot chain
 
-You might be wondering why I’m bringing this up at this point. Here’s why:
+Now that the CLI is understood, let's get going with this and run:
 
-To properly configure each project with the Polkadot API, it's important to know which chains we’ll be interacting with upfront. This allows us to set everything up correctly from the start.
+```shell
+$ bunx papi add dot -n polkadot
+```
 
-While it’s certainly possible to add new chains later if needed, for the sake of this tutorial, we’ll configure everything in advance.
-This approach keeps things organized and helps ensure a smoother workflow.
+> Note: bunx is the equivelent package runner for bun (as npx is for npm).
+> You can read [more here](https://bun.sh/docs/cli/bunx).
 
-Given the steps we’ll be taking, we’ll need to configure three different chains:
+What happened here?
+Using `bunx` we asked (politely) from Polkadot API to fetch for you, in a `dot` "variable", the metadata from (the well-known-chain) `polkadot`.
 
-- The `polkadot` relay chain
-- The `people` system parachain and
-- The `collectives` parachain
+The outcome of the command should be the following:
 
-## Configuring Polkadot API
+```shell
+$ bunx papi add dot -n polkadot
 
-Polkadot API comes with a handy bundle of chainspecs for both [`well-known-chains` and `system-chains`](https://github.com/polkadot-api/polkadot-api/tree/main/packages/known-chains) to make your life easier.
+✔ Metadata saved as .papi/metadata/dot.scale
+Saved new spec "dot"
+Reading metadata
+CLI Building entry: .papi/descriptors/src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.3.0
+CLI Target: esnext
+CJS Build start
+ESM Build start
+ESM .papi/descriptors/dist/index.mjs                  9.88 KB
+ESM .papi/descriptors/dist/metadataTypes-FYTIEX4M.mjs 146.06 KB
+ESM .papi/descriptors/dist/descriptors-BGFWDDEF.mjs   25.73 KB
+ESM ⚡️ Build success in 20ms
+CJS .papi/descriptors/dist/index.js 190.36 KB
+CJS ⚡️ Build success in 20ms
+Compilation started
+Compilation successful
+bun install
+bun install v1.1.7 (b0b7db5c)
 
-This means you don’t have to worry about finding endpoints for fetching metadata or chainspecs (which are needed for the light client). All of this is bundled right into PAPI.
+ + @polkadot-api/descriptors@.papi/descriptors
 
-As we move forward, you’ll see just how helpful this can be in simplifying the setup process.
+ 1 package installed [19.00ms]
+```
 
-In the next step, we will find out more details about PAPI's code generation and "adding chains" functionality.
+So what PAPI did for you, behind the scenes?
+
+1.  Created a directory called `.papi` and under it in the dir `metadata` saved all the latest metadata for `polkadot`;
+2.  In your `package.json` file added a dependency link to the descriptors that are created: `"@polkadot-api/descriptors": "file:.papi/descriptors",`.
+3.  Under the `.papi` directory, created a PAPI configuration file called `polkadot-api.json` that looks like this:
+
+```
+{
+ "version": 0,
+ "descriptorPath": ".papi/descriptors",
+ "entries": {
+   "dot": {
+     "chain": "polkadot",
+     "metadata": ".papi/metadata/dot.scale"
+   }
+ }
+}
+```
+
+and contains in `entries` the "variable" `dot`, linked to the respective chain and metadata;
+
+> Note: the command `bunx papi add dot -n polkadot` is "same" if we used an RPC endpoint with the flag -w. "Same" should not be lightly taken into account. This is not entiredly correct. If the PAPI's entries are used instead of an RPC endpoint, then the metadata are downloaded in a more decentralized manner - instead of being downladed from 1 specific url.
+
+>
+> `$ bunx papi add -w wss://polkadot-collectives-rpc.polkadot.io dot`
+>
+> but since `polkadot` is a known chain, the first command will suffice
+
+In just few words - configured all the paths and needed dependencies with just 1 command.
+
+## Adding people and collectives parachains
+
+Let's run the commands for the rest of the chains we need:
+
+```shell
+$ bunx papi add people -n polkadot_people
+```
+
+and
+
+```shell
+$ bunx papi add collectives -n polkadot_collectives
+```
+
+## Configuration Complete
+
+Configuration is now finished! All the necessary chains are set up in your project, and the metadata is neatly organized in a structured directory.
+
+> Note: It’s a great idea to add PAPI to the "postinstall" script in your package.json to automate the generation of types after installation. (see `package.json` file for how that looks.)
