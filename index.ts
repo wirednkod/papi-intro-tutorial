@@ -9,20 +9,18 @@ function makeClient(endpoint: string): PolkadotClient {
   return client;
 }
 
-// TODO:
-// - Create a new `async` function` named `printChainInfo`.
-//   - It should accept a parameter `client` of type `PolkadotClient`.
-// - Write the logic for `printChainInfo`.
-//   - Call the `getChainSpecData` method, which is exposed on `client`. **IMPORTANT NOTE:** This method is used in this tutorial, but it should not be used in production apps.
-//   - `await` the result, and assign the output to a new constant `chainSpec`.
-//   - Call the `getFinalizedBlock` method, which is exposed on `client`.
-//   - `await` the result, and assign the output to a new constant `finalizedBlock`.
-//   - Print `chainSpec.name` and `finalizedBlock.number` with a friendly message.
+async function printChainInfo(client: PolkadotClient) {
+  // **IMPORTANT NOTE:** This method is used in this tutorial, but it should not be used in production apps.
+  let chain = await client.getChainSpecData();
+  let finalizedBlock = await client.getFinalizedBlock();
+  console.log(
+    `Connected to ${chain.name} at block ${finalizedBlock.number}.\n`
+  );
+}
 
 async function main() {
   const polkadotClient = makeClient("wss://rpc.polkadot.io");
-  // TODO: Replace this line with `await printChainInfo({ polkadotClient });`
-  console.log({ polkadotClient });
+  await printChainInfo(polkadotClient);
 
   console.log(`Done!`);
   process.exit(0);
