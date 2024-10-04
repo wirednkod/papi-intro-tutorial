@@ -1,145 +1,166 @@
-# Codegen & "adding" chains
+# Connection Process
 
-### Some background first
+The connection process for PAPI follows a structured workflow that ensures your application can both connect to and interact with the Polkadot network.
+Here’s a step-by-step explanation:
 
-To connect to a blockchain network like Polkadot, the fundamental requirement is a provider, which acts as a bridge between your application and the chain. Providers typically connect to an RPC (Remote Procedure Call) endpoint, which allows your app to retrieve data like blocks and events. However, simply connecting to the chain doesn’t enable full interaction.
+### 1. Provider Setup
 
-To interact with the chain — whether by querying storage, making transactions, or calling runtime methods — you also need to understand what data is available and how to format it. This is where metadata becomes crucial. The chain's metadata contains a detailed description of all the storage items, runtime functions, and transactions available on that network, as well as their data types.
+The first step in connecting to a chain is creating a provider, which acts as a communication bridge between your application and the blockchain. PAPI offers multiple ways to establish this connection, such as using:
 
-Here’s how the process works:
+- **getWsProvider (the WebSocket Provider)**: Connects via a WebSocket URL, often used for real-time interactions.
+- **Smoldot Provider**: A lightweight option that runs a light client in the browser, particularly useful for environments with limited resources​.
 
-During runtime, PAPI can automatically request the metadata from the chain you're connected to. From this metadata, it generates codecs (serialization and deserialization tools) to communicate with the chain's functions and storage. Before development, however, you need to have this information ready, in order to make your life easier on knowing how to communicate with the chain.
+In your app, you would initialize the provider like this:
 
-PAPI simplifies this with its CLI (Command Line Interface), which allows you to download the chain’s metadata ahead of time. This metadata is then used to generate all the necessary type descriptors, so you don’t have to manually figure out the structure of every interaction.
-
-In practice, using the CLI to download metadata ensures that your app stays in sync with the specific network you're developing for, especially if that chain undergoes runtime upgrades or type changes​.
-
-That CLI's syntax is:
-
-```shell
-$  npx papi add --help
-
-Usage: polkadot-api add [options] <key>
-
-Add a new chain spec to the list
-
-Arguments:
-  key                         Key identifier for the chain spec
-
-Options:
-  --config <filename>         Source for the config file
-  -f, --file <filename>       Source from metadata encoded file
-  -w, --wsUrl <URL>           Source from websocket URL
-  -c, --chainSpec <filename>  Source from chain spec file
-  -n, --name <name>           Source from a well-known chain (choices: "ksmcc3", "paseo",
-                              "polkadot", "polkadot_collectives", "rococo_v2_2", "westend2", [...]")
-  --wasm <filename>           Source from runtime wasm file
-  --no-persist                Do not persist the metadata as a file
-  --skip-codegen              Skip running codegen after adding
-  -h, --help                  display help for command
+```ts
+import { getWsProvider } from "polkadot-api/ws-provider/web";
+...
+const provider = new getWsProvider('wss://rpc.polkadot.io');
 ```
 
-The `papi add` command is used to register a new chain in your Polkadot project. When running this command, you need to provide a key — a unique identifier that will be used as a constant name when generating code for the chain. Additionally, you specify a source for the chain’s metadata using one of the following flags:
+### 2. Client Initialization
 
-- `-f`, `-w`, `-c`, `-n`, or `--wasm`, depending on whether the metadata comes from a file, websocket, chain, or other source.
+After setting up the provider, the next step is to initialize a **client**.
 
-The command then downloads the latest metadata for the chain and stores it in a .papi folder. This folder contains:
+The client is responsible for making RPC calls to the chain, fetching metadata, and enabling interactions like querying storage or sending transactions.
 
-1. A **configuration file** called `polkadot-api.json`, which holds the setup information for the chain.
-2. **A metadata file** named `${key}.scale`, which contains the chain's specific metadata for later use.
-
-This structure ensures that all the necessary metadata for interacting with the chain is preloaded and organized, streamlining your development process.
-
-## Adding Polkadot chain
-
-Now that the CLI is understood, let's get going with this and run:
-
-```shell
-$ bunx papi add dot -n polkadot
+```ts
+import { createClient, type PolkadotClient } from "polkadot-api";
+...
+const client: PolkadotClient = createClient(provider);
 ```
 
-> Note: bunx is the equivelent package runner for bun (as npx is for npm).
-> You can read [more here](https://bun.sh/docs/cli/bunx).
+The `PolkadotClient` interface shapes the top-level API for polkadot-api. Once we get a client using `createClient` function, the following can be used:
 
-What happened here?
-Using `bunx` we asked (politely) from Polkadot API to fetch for you, in a `dot` "variable", the metadata from (the well-known-chain) `polkadot`.
+```ts
+interface PolkadotClient {
+  /**
+   * Retrieve the ChainSpecData as it comes from the [JSON-RPC
+   * spec](https://paritytech.github.io/json-rpc-interface-spec/api/chainSpec.html)
+   */
+  getChainSpecData: () => Promise<ChainSpecData>;
 
-The outcome of the command should be the following:
+  /**
+   * Observable that emits `BlockInfo` from the latest known finalized block.
+   * It's a multicast and stateful observable, that will synchronously replay
+   * its latest known state.
+   */
+  finalizedBlock$: Observable<BlockInfo>;
+  /**
+   * @returns Latest known finalized block.
+   */
+  getFinalizedBlock: () => Promise<BlockInfo>;
 
-```shell
-$ bunx papi add dot -n polkadot
+  /**
+   * Observable that emits an Array of `BlockInfo`, being the first element the
+   * latest known best block, and the last element the latest known finalized
+   * block. It's a multicast and stateful observable, that will synchronously
+   * replay its latest known state. This array is an immutable data structure;
+   * i.e. a new array is emitted at every event but the reference to its
+   * children are stable if the children didn't change.
+   *
+   * Note that subscribing to this observable already supersedes the need of
+   * subscribing to `finalizedBlock$`, since the last element of the array will
+   * be the latest known finalized block.
+   */
+  bestBlocks$: Observable<BlockInfo[]>;
+  /**
+   * @returns Array of `BlockInfo`, being the first element the latest
+   *          known best block, and the last element the latest known
+   *          finalized block.
+   */
+  getBestBlocks: () => Promise<BlockInfo[]>;
 
-✔ Metadata saved as .papi/metadata/dot.scale
-Saved new spec "dot"
-Reading metadata
-CLI Building entry: .papi/descriptors/src/index.ts
-CLI Using tsconfig: tsconfig.json
-CLI tsup v8.3.0
-CLI Target: esnext
-CJS Build start
-ESM Build start
-ESM .papi/descriptors/dist/index.mjs                  9.88 KB
-ESM .papi/descriptors/dist/metadataTypes-FYTIEX4M.mjs 146.06 KB
-ESM .papi/descriptors/dist/descriptors-BGFWDDEF.mjs   25.73 KB
-ESM ⚡️ Build success in 20ms
-CJS .papi/descriptors/dist/index.js 190.36 KB
-CJS ⚡️ Build success in 20ms
-Compilation started
-Compilation successful
-bun install
-bun install v1.1.7 (b0b7db5c)
+  /**
+   * Observable to watch Block Body.
+   *
+   * @param hash  It can be a block hash, `"finalized"`, or `"best"`
+   * @returns Observable to watch a block body. There'll be just one event
+   *          with the payload and the observable will complete.
+   */
+  watchBlockBody: (hash: string) => Observable<HexString[]>;
+  /**
+   * Get Block Body (Promise-based)
+   *
+   * @param hash  It can be a block hash, `"finalized"`, or `"best"`
+   * @returns Block body.
+   */
+  getBlockBody: (hash: string) => Promise<HexString[]>;
 
- + @polkadot-api/descriptors@.papi/descriptors
+  /**
+   * Get Block Header (Promise-based)
+   *
+   * @param hash  It can be a block hash, `"finalized"` (default), or
+   *              `"best"`
+   * @returns Block hash.
+   */
+  getBlockHeader: (hash?: string) => Promise<BlockHeader>;
 
- 1 package installed [19.00ms]
-```
+  /**
+   * Broadcast a transaction (Promise-based)
+   *
+   * @param transaction  SCALE-encoded tx to broadcast.
+   * @param at           It can be a block hash, `"finalized"`, or `"best"`.
+   *                     That block will be used to verify the validity of
+   *                     the tx, retrieve the next nonce,
+   *                     and create the mortality taking that block into
+   *                     account.
+   */
+  submit: (
+    transaction: HexString,
+    at?: HexString
+  ) => Promise<TxFinalizedPayload>;
+  /**
+   * Broadcast a transaction and returns an Observable. The observable will
+   * complete as soon as the transaction is in a finalized block.
+   *
+   * @param transaction  SCALE-encoded tx to broadcast.
+   * @param at           It can be a block hash, `"finalized"`, or `"best"`.
+   *                     That block will be used to verify the validity of
+   *                     the tx, retrieve the next nonce,
+   *                     and create the mortality taking that block into
+   *                     account.
+   */
+  submitAndWatch: (
+    transaction: HexString,
+    at?: HexString
+  ) => Observable<TxBroadcastEvent>;
 
-So what PAPI did for you, behind the scenes?
+  /**
+   * Returns an instance of a `TypedApi`
+   *
+   * @param descriptors  Pass descriptors from `@polkadot-api/descriptors`
+   *                     generated by `papi` CLI.
+   */
+  getTypedApi: <D extends ChainDefinition>(descriptors: D) => TypedApi<D>;
 
-1.  Created a directory called `.papi` and under it in the dir `metadata` saved all the latest metadata for `polkadot`;
-2.  In your `package.json` file added a dependency link to the descriptors that are created: `"@polkadot-api/descriptors": "file:.papi/descriptors",`.
-3.  Under the `.papi` directory, created a PAPI configuration file called `polkadot-api.json` that looks like this:
+  /**
+   * This will `unfollow` the provider, disconnect and error every subscription.
+   * After calling it nothing can be done with the client.
+   */
+  destroy: () => void;
 
-```
-{
- "version": 0,
- "descriptorPath": ".papi/descriptors",
- "entries": {
-   "dot": {
-     "chain": "polkadot",
-     "metadata": ".papi/metadata/dot.scale"
-   }
- }
+  /**
+   * This API is meant as an "escape hatch" to allow access to debug endpoints
+   * such as `system_version`, and other useful endpoints that are not spec
+   * compliant.
+   *
+   * @example
+   *
+   *   const systemVersion = await client._request<string>("system_version", [])
+   *   const myFancyThhing = await client._request<
+   *     { value: string },
+   *     [id: number]
+   *   >("very_fancy", [1714])
+   *
+   */
+  _request: <Reply = any, Params extends Array<any> = any[]>(
+    method: string,
+    params: Params
+  ) => Promise<Reply>;
 }
 ```
 
-and contains in `entries` the "variable" `dot`, linked to the respective chain and metadata;
-
-> Note: the command `bunx papi add dot -n polkadot` is "same" if we used an RPC endpoint with the flag -w. "Same" should not be lightly taken into account. This is not entiredly correct. If the PAPI's entries are used instead of an RPC endpoint, then the metadata are downloaded in a more decentralized manner - instead of being downladed from 1 specific url.
-
+> Note: `PolkadotClient` heavily relies on rxjs' `Observable`, used as well under the hood of Promise-based methods. Every method is fairly straight-forward and already documented exhaustively, except for getTypedApi. Let's dive into it.
 >
-> `$ bunx papi add -w wss://polkadot-collectives-rpc.polkadot.io dot`
->
-> but since `polkadot` is a known chain, the first command will suffice
-
-In just few words - configured all the paths and needed dependencies with just 1 command.
-
-## Adding people and collectives parachains
-
-Let's run the commands for the rest of the chains we need:
-
-```shell
-$ bunx papi add people -n polkadot_people
-```
-
-and
-
-```shell
-$ bunx papi add collectives -n polkadot_collectives
-```
-
-## Configuration Complete
-
-Configuration is now finished! All the necessary chains are set up in your project, and the metadata is neatly organized in a structured directory.
-
-> Note: It’s a great idea to add PAPI to the "postinstall" script in your package.json to automate the generation of types after installation. (see `package.json` file for how that looks.)
+> Information from: https://papi.how/client
