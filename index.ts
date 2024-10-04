@@ -5,8 +5,7 @@ import {
   type PolkadotClient,
   type SS58String,
 } from "polkadot-api";
-// TODO: Import `people` from `"@polkadot-api/descriptors"`;
-import { dot } from "@polkadot-api/descriptors";
+import { dot, people } from "@polkadot-api/descriptors";
 
 function makeClient(endpoint: string): PolkadotClient {
   console.log(`Connecting to endpoint: ${endpoint}`);
@@ -34,21 +33,17 @@ async function getBalance(
   return free + reserved;
 }
 
-// TODO:
-// - Create a new `async` function called `getDisplayName`:
-//   - It accepts two parameters:
-//     - `peopleClient` which is of type `PolkadotClient`.
-//     - `address` which is of type `SS58String`.
-//   - It returns a `Promise<string | undefined>`.
-// - Write the logic of the `getDisplayName` function:
-//   - Call the `getTypedApi` method on the `peopleClient` variable.
-//     - The `getTypedApi` method should include the parameter `people`, which we imported above.
-//     - Assign the result to a new constant `peopleApi`.
-//   - Call `peopleApi.query.Identity.IdentityOf.getValue(address)`.
-//   - `await` the result, and assign it to a new constant `accountInfo`.
-//   - Extract the display name with: `accountInfo?.[0].info.display.value?.asText()`
-//     - Assign the result to a new constant `displayName`.
-//   - Return the `displayName` constant.
+async function getDisplayName(
+  peopleClient: PolkadotClient,
+  address: SS58String
+): Promise<string | undefined> {
+  const peopleApi = peopleClient.getTypedApi(people);
+  const accountInfo = await peopleApi.query.Identity.IdentityOf.getValue(
+    address
+  );
+  const displayName = accountInfo?.[0].info.display.value?.asText();
+  return displayName;
+}
 
 async function main() {
   const polkadotClient = makeClient("wss://rpc.polkadot.io");
@@ -59,11 +54,8 @@ async function main() {
 
   const address = "15DCZocYEM2ThYCAj22QE4QENRvUNVrDtoLBVbCm5x4EQncr";
   const balance = await getBalance(polkadotClient, address);
-  // TODO:
-  // - Call `getDisplayName`, using the constants `peopleClient` and `address.
-  // - `await` the result, and assign it to a constant named `display`.
-  // - Update the message below to include the display name of the user.
-  console.log(`Balance of ${address} is ${balance}.`);
+  const displayName = await getDisplayName(peopleClient, address);
+  console.log(`Balance of ${displayName} (${address}) is ${balance}.`);
 
   console.log(`Done!`);
   process.exit(0);
